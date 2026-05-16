@@ -5,29 +5,6 @@
 char* s_add(char *n1_arr, char *n2_arr, int s_n1, int s_n2);
 void dis(char *r_arr);
 
-int main()
-{
-    char num1_arr[51];
-    char num2_arr[51];
-
-    scanf("%50s", num1_arr);
-    scanf("%50s", num2_arr);
-
-    char *n1p = num1_arr;
-    char *n2p = num2_arr;
-
-    int a1_size = strlen(num1_arr);
-    int a2_size = strlen(num2_arr);
-
-    char *rp = s_add( n1p, n2p, a1_size, a2_size);
-    
-    dis(rp);
-    
-    free(rp);
-
-    return 0;
-    
-}
 
 char* s_add(char *n1_arr, char *n2_arr, int s_n1, int s_n2)
 {
