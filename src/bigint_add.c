@@ -3,7 +3,6 @@
 #include<stdlib.h>
 
 char* s_add(char *n1_arr, char *n2_arr, int s_n1, int s_n2);
-void dis(char *r_arr);
 
 
 char* s_add(char *n1_arr, char *n2_arr, int s_n1, int s_n2)
@@ -75,14 +74,4 @@ char* s_add(char *n1_arr, char *n2_arr, int s_n1, int s_n2)
         }
 
     return result;
-}
-
-void dis(char *r_arr)
-{
-    for(int i = 0; r_arr[i] != '\0'; i++)
-    {
-        printf("%c", r_arr[i]);
-    }
-    printf("\n");
-    return;
 }

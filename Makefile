@@ -17,3 +17,12 @@ run: all
 
 clean:
 	rm -f $(TARGET)
+
+SUB_TARGET = build/test_sub
+
+
+sub:
+	$(CC) $(CFLAGS) src/bigint_subtract.c tests/test_subtract.c -o $(SUB_TARGET)
+
+run-sub: sub
+	./$(SUB_TARGET)
