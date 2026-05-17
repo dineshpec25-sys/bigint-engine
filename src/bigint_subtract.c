@@ -1,40 +1,58 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
 
-char *bigint_sub(char* input_arr1, char* input_arr2, int size_arr1, int size_arr2);
-
-char *bigint_sub(char* input_arr1, char* input_arr2, int size_arr1, int size_arr2)
+char *bigint_sub(char *input_arr1, char *input_arr2,
+                 int size_arr1, int size_arr2)
 {
-    char local_array1[size_arr1+1];
-    char local_array2[size_arr2+1];
+    int master_count =
+        (size_arr1 > size_arr2) ? size_arr1 : size_arr2;
 
-    int count_local_array1 = 0;
-    for(int i = 0; i < size_arr1; i++)
+    char local_array1[master_count + 1];
+    char local_array2[master_count + 1];
+
+    /* left zero padding */
+    for(int i = 0; i < master_count; i++)
     {
-        local_array1[count_local_array1++] = input_arr1[i];
+        if(i < master_count - size_arr1)
+        {
+            local_array1[i] = '0';
+        }
+        else
+        {
+            local_array1[i] =
+                input_arr1[i - (master_count - size_arr1)];
+        }
     }
-    local_array1[count_local_array1] = '\0';
+    local_array1[master_count] = '\0';
 
-    int count_local_array2 = 0;
-    for(int i = 0; i < size_arr2; i++)
+    for(int i = 0; i < master_count; i++)
     {
-        local_array2[count_local_array2++] = input_arr2[i];
+        if(i < master_count - size_arr2)
+        {
+            local_array2[i] = '0';
+        }
+        else
+        {
+            local_array2[i] =
+                input_arr2[i - (master_count - size_arr2)];
+        }
     }
-    local_array2[count_local_array2] = '\0';
+    local_array2[master_count] = '\0';
 
+    /* compare and swap if needed */
     int check_interchange = 0;
-    for(int i = 0; i < size_arr1; i++)
+
+    for(int i = 0; i < master_count; i++)
     {
         if(local_array1[i] < local_array2[i])
         {
-            char intermediate[size_arr1+1];
-            for(int i = 0; i < size_arr1; i++)
+            for(int j = 0; j < master_count; j++)
             {
-                intermediate[i] = local_array1[i];
-                local_array1[i] = local_array2[i];
-                local_array2[i] = intermediate[i];
+                char temp = local_array1[j];
+                local_array1[j] = local_array2[j];
+                local_array2[j] = temp;
             }
+
             check_interchange = 1;
             break;
         }
@@ -45,18 +63,23 @@ char *bigint_sub(char* input_arr1, char* input_arr2, int size_arr1, int size_arr
         }
     }
 
-    char *result = malloc((size_arr1+1) * sizeof(char));
-    int count = size_arr1;
+    /* subtraction */
+    char *result = malloc(master_count + 1);
+
+    int count = master_count;
     result[count--] = '\0';
-    int count_digits = size_arr1-1;
+
+    int digit_index = master_count - 1;
     int borrow = 0;
 
-    for(int i = 0; i < size_arr2; i++)
+    for(int i = 0; i < master_count; i++)
     {
-        int left_digit = local_array1[count_digits] - '0';
-        int right_digit = local_array2[count_digits] - '0';
+        int left_digit =
+            (local_array1[digit_index] - '0') - borrow;
 
-        left_digit -= borrow;
+        int right_digit =
+            local_array2[digit_index] - '0';
+
         borrow = 0;
 
         if(left_digit < right_digit)
@@ -65,21 +88,22 @@ char *bigint_sub(char* input_arr1, char* input_arr2, int size_arr1, int size_arr
             borrow = 1;
         }
 
-        int int_sub = left_digit - right_digit;
-        char char_sub = int_sub + '0';
+        result[count--] =
+            (left_digit - right_digit) + '0';
 
-        result[count--] = char_sub;
-        count_digits--;
+        digit_index--;
     }
 
+    /* add minus sign */
     if(check_interchange == 1)
     {
-        result = realloc(result, (size_arr1+2) * sizeof(char));
-        for(int i = size_arr1; i >= 0; i--)
+        result = realloc(result, master_count + 2);
+
+        for(int i = master_count; i >= 0; i--)
         {
-            char temp = result[i];
-            result[i+1] = temp;
+            result[i + 1] = result[i];
         }
+
         result[0] = '-';
     }
 
