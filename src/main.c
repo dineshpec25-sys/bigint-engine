@@ -19,6 +19,8 @@ int main()
         printf(">>");
         scanf("%1999s", input);
 
+        if(!strcmp(input, "exit")) return 0;
+        
         praser(num1, num2, &op, input);
 
         char *result = NULL;
@@ -60,7 +62,6 @@ int main()
                 printf("Invalid operator\n");
                 return 1;
         }
-        if(!strcmp(input, "exit")) return 0;
     }
 
     return 0;
