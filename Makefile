@@ -1,13 +1,12 @@
 CC = gcc
 CFLAGS = -Wall -Wextra
 
-TARGET = build/test
+TARGET = build/main
 
 SRC = src/*.c
-TEST = tests/test.c
 
 all:
-	$(CC) $(CFLAGS) $(SRC) $(TEST) -o $(TARGET)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
 
 run: all
 	./$(TARGET)
